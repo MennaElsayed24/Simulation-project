@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Queue Simulation Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="p-6">
+    <div class="max-w-7xl mx-auto">
+
+        <!-- Main Container -->
+        <div class="card">
+            <h1 class="text-4xl font-bold text-center mb-2" style="color: #667eea;">Queue Simulation Hub</h1>
+            <p class="text-center text-gray-600 mb-8">Select your simulation type and configure parameters</p>
+
+            <!-- Step 1: Queue Type Selection -->
+            <div id="step1" class="simulation-section">
+                <div class="section-title">
+                    <span class="step-indicator">Step 1</span>
+                    Select Queue Type
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <div class="option-card" data-queue="mathematical">
+                        <div class="option-icon">M</div>
+                        <h3 class="font-semibold text-lg">Mathematical Queue</h3>
+                        <p class="text-sm text-gray-600 mt-2">Theoretical calculations</p>
+                    </div>
+
+                    <div class="option-card" data-queue="single">
+                        <div class="option-icon">1</div>
+                        <h3 class="font-semibold text-lg">Single Server</h3>
+                        <p class="text-sm text-gray-600 mt-2">One server system</p>
+                    </div>
+
+                    <div class="option-card" data-queue="multi">
+                        <div class="option-icon">N</div>
+                        <h3 class="font-semibold text-lg">Multi-Server</h3>
+                        <p class="text-sm text-gray-600 mt-2">Multiple servers system</p>
+                    </div>
+
+                    <div class="option-card" data-queue="inventory">
+                        <div class="option-icon">I</div>
+                        <h3 class="font-semibold text-lg">Inventory</h3>
+                        <p class="text-sm text-gray-600 mt-2">(M,N) Periodic review</p>
+                    </div>
+
+                    <div class="option-card" data-queue="uniformity">
+                        <div class="option-icon">χ²</div>
+                        <h3 class="font-semibold text-lg">Uniformity Test</h3>
+                        <p class="text-sm text-gray-600 mt-2">Chi-square test</p>
+                    </div>
+
+                    <div class="option-card" data-queue="independence">
+                        <div class="option-icon">ρ</div>
+                        <h3 class="font-semibold text-lg">Independence Test</h3>
+                        <p class="text-sm text-gray-600 mt-2">Dependency test</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 2: Random Number Method -->
+            <div id="step2" class="simulation-section section-disabled">
+                <div class="section-title">
+                    <span class="step-indicator">Step 2</span>
+                    Random Number Generation
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="option-card" data-random="manual">
+                        <h3 class="font-semibold text-lg">Manual Input</h3>
+                        <p class="text-sm text-gray-600 mt-2">Enter random numbers yourself</p>
+                    </div>
+
+                    <div class="option-card" data-random="prng">
+                        <h3 class="font-semibold text-lg">PRNG (Auto)</h3>
+                        <p class="text-sm text-gray-600 mt-2">Pseudo-random number generator</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 3: PRNG Method Selection -->
+            <div id="step3" class="simulation-section section-disabled">
+                
+                <div id="dualConfigNote" class="hidden info-box mb-4">
+                    <strong>Note:</strong> This simulation requires 2 sets of random numbers.
+                    You can choose different methods for each set.
+                </div>
+
+                <!-- Single Method (One Set) - No longer used -->
+                <div id="singleMethodSelection" class="hidden">
+                    <div class="section-title">
+                        <span class="step-indicator">Step 3</span>
+                        Select PRNG Method
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="option-card" data-prng="middlesquare">
+                            <div class="option-icon">MS</div>
+                            <h3 class="font-semibold text-lg">Middle-Square Method</h3>
+                        </div>
+
+                        <div class="option-card" data-prng="lcg">
+                            <div class="option-icon">LC</div>
+                            <h3 class="font-semibold text-lg">LCG Method</h3>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dual Method (Two Sets) -->
+                <div id="dualMethodSelection" class="hidden">
+                    <div class="section-title">
+                        <span class="step-indicator">Step 3</span>
+                        Select PRNG Methods
+                    </div>
+
+                    <!-- Set 1 -->
+                    <div class="mb-6">
+                        <h3 class="text-xl font-semibold mb-3" style="color:#667eea;" id="set1Label">Set 1: Interarrival Times</h3>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="option-card" data-prng-set1="middlesquare">
+                                <div class="option-icon">MS</div>
+                                <h3 class="font-semibold">Middle-Square</h3>
+                            </div>
+
+                            <div class="option-card" data-prng-set1="lcg">
+                                <div class="option-icon">LC</div>
+                                <h3 class="font-semibold">LCG</h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Set 2 -->
+                    <div class="mb-6">
+                        <h3 class="text-xl font-semibold mb-3" style="color:#667eea;" id="set2Label">Set 2: Service Times</h3>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="option-card" data-prng-set2="middlesquare">
+                                <div class="option-icon">MS</div>
+                                <h3 class="font-semibold">Middle-Square</h3>
+                            </div>
+
+                            <div class="option-card" data-prng-set2="lcg">
+                                <div class="option-icon">LC</div>
+                                <h3 class="font-semibold">LCG</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PRNG CONFIG -->
+            <div id="step4" class="simulation-section section-disabled">
+                <div class="section-title">
+                    <span class="step-indicator">Step 4</span>
+                    Configure PRNG Parameters
+                </div>
+
+                <!-- SET 1 -->
+                <div class="border border-indigo-300 p-4 rounded-lg mb-6 bg-white">
+                    <h3 class="text-lg font-bold text-indigo-700 mb-2" id="set1ConfigLabel">SET 1: Interarrival Times</h3>
+
+                    <!-- Middle Square Set 1 -->
+                    <div id="set1MSConfig" class="hidden">
+                        <input id="msSeed1" type="number" class="input" placeholder="Seed" />
+                        <input id="msCount1" type="number" class="input" placeholder="Count" />
+                        <select id="msScale1" class="input">
+                            <option value="10">Scale: 10 (0-9)</option>
+                            <option value="100" selected>Scale: 100 (0-99)</option>
+                            <option value="1000">Scale: 1000 (0-999)</option>
+                        </select>
+
+                        <button id="generateMS1Btn" class="btn-blue mt-4">Generate MS Numbers</button>
+
+                        <div id="msResults1" class="hidden mt-3"></div>
+                    </div>
+
+                    <!-- LCG Set 1 -->
+                    <div id="set1LCGConfig" class="hidden">
+                        <input id="lcgSeed1" type="number" class="input" placeholder="Seed" />
+                        <input id="lcgA1" type="number" class="input" placeholder="Multiplier (a)" />
+                        <input id="lcgC1" type="number" class="input" placeholder="Increment (c)" />
+                        <input id="lcgM1" type="number" class="input" placeholder="Modulus (m)" />
+                        <input id="lcgCount1" type="number" class="input" placeholder="Count" />
+                        <select id="lcgScale1" class="input">
+                            <option value="10">Scale: 10 (0-9)</option>
+                            <option value="100" selected>Scale: 100 (0-99)</option>
+                            <option value="1000">Scale: 1000 (0-999)</option>
+                        </select>
+
+                        <button id="generateLCG1Btn" class="btn-blue mt-4">Generate LCG Numbers</button>
+
+                        <div id="lcgResults1" class="hidden mt-3"></div>
+                    </div>
+                </div>
+
+                <!-- SET 2 -->
+                <div class="border border-orange-300 p-4 rounded-lg bg-white">
+                    <h3 class="text-lg font-bold text-orange-700 mb-2" id="set2ConfigLabel">SET 2: Service Times</h3>
+
+                    <!-- Middle Square Set 2 -->
+                    <div id="set2MSConfig" class="hidden">
+                        <input id="msSeed2" type="number" class="input" placeholder="Seed" />
+                        <input id="msCount2" type="number" class="input" placeholder="Count" />
+                        <select id="msScale2" class="input">
+                            <option value="10">Scale: 10 (0-9)</option>
+                            <option value="100" selected>Scale: 100 (0-99)</option>
+                            <option value="1000">Scale: 1000 (0-999)</option>
+                        </select>
+
+                        <button id="generateMS2Btn" class="btn-blue mt-4">Generate MS Numbers</button>
+
+                        <div id="msResults2" class="hidden mt-3"></div>
+                    </div>
+
+                    <!-- LCG Set 2 -->
+                    <div id="set2LCGConfig" class="hidden">
+                        <input id="lcgSeed2" type="number" class="input" placeholder="Seed" />
+                        <input id="lcgA2" type="number" class="input" placeholder="Multiplier (a)" />
+                        <input id="lcgC2" type="number" class="input" placeholder="Increment (c)" />
+                        <input id="lcgM2" type="number" class="input" placeholder="Modulus (m)" />
+                        <input id="lcgCount2" type="number" class="input" placeholder="Count" />
+                        <select id="lcgScale2" class="input">
+                            <option value="10">Scale: 10 (0-9)</option>
+                            <option value="100" selected>Scale: 100 (0-99)</option>
+                            <option value="1000">Scale: 1000 (0-999)</option>
+                        </select>
+
+                        <button id="generateLCG2Btn" class="btn-blue mt-4">Generate LCG Numbers</button>
+
+                        <div id="lcgResults2" class="hidden mt-3"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Start Simulation Section -->
+            <div id="step5" class="simulation-section section-disabled">
+                <div class="text-center">
+                    <button id="startSimBtn" class="btn-primary">▶ Start</button>
+                </div>
+            </div>
+
+            <!-- Simulation Area -->
+            <div id="simulationArea" class="simulation-section section-disabled">
+                <div class="section-title">
+                    <span class="step-indicator">Results</span>
+                    Simulation Output
+                </div>
+                <div id="simulationContent"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Load JavaScript - PRNG module must be loaded first -->
+    <script src="js/prng.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/mathematical.js"></script>
+    <script src="js/single-server.js"></script>
+    <script src="js/multi-server.js"></script>
+    <script src="js/inventory.js"></script>
+    <script src="js/uniformity-test.js"></script>
+    <script src="js/independence-test.js"></script>
+
+    <script>
+        // Update labels dynamically based on selected queue type
+        document.querySelectorAll('[data-queue]').forEach(card => {
+            card.addEventListener('click', function() {
+                const queueType = this.dataset.queue;
+                updateLabelsForQueue(queueType);
+            });
+        });
+
+        function updateLabelsForQueue(queueType) {
+            const set1Label = document.getElementById('set1Label');
+            const set2Label = document.getElementById('set2Label');
+            const set1ConfigLabel = document.getElementById('set1ConfigLabel');
+            const set2ConfigLabel = document.getElementById('set2ConfigLabel');
+
+            if (queueType === 'single') {
+                if (set1Label) set1Label.textContent = 'Set 1: Interarrival Times';
+                if (set2Label) set2Label.textContent = 'Set 2: Service Times';
+                if (set1ConfigLabel) set1ConfigLabel.textContent = 'SET 1: Interarrival Times';
+                if (set2ConfigLabel) set2ConfigLabel.textContent = 'SET 2: Service Times';
+            } else if (queueType === 'multi') {
+                if (set1Label) set1Label.textContent = 'Set 1: Interarrival Times';
+                if (set2Label) set2Label.textContent = 'Set 2: Service Times';
+                if (set1ConfigLabel) set1ConfigLabel.textContent = 'SET 1: Arrival Times';
+                if (set2ConfigLabel) set2ConfigLabel.textContent = 'SET 2: Service Times';
+            } else if (queueType === 'inventory') {
+                if (set1Label) set1Label.textContent = 'Set 1: Demand';
+                if (set2Label) set2Label.textContent = 'Set 2: Lead Time';
+                if (set1ConfigLabel) set1ConfigLabel.textContent = 'SET 1: Demand';
+                if (set2ConfigLabel) set2ConfigLabel.textContent = 'SET 2: Lead Time';
+            }
+        }
+    </script>
+
+</body>
+</html>
